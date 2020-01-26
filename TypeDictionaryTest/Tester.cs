@@ -39,8 +39,8 @@ namespace TypeDictionaryTest
         {
             String chars = "Hello Items!";
             _map.Add<Char>(chars);
-            _map.Remove<Char>("elm");
-            String expected = "Ho Its!";
+            _map.Remove<Char>("ellm");
+            String expected = "Ho Ites!";
             Assert.Equal(expected, _map.Get<Char>());
         }
         [Fact]
