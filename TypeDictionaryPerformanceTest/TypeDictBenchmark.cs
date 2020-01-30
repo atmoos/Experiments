@@ -6,9 +6,10 @@ using TypeDictionary;
 
 namespace TypeDictionaryPerformanceTest
 {
+    [RPlotExporter]
     public abstract class TypeDictBenchmark<TDict> where TDict : ITypeDictionary<Object>, new()
     {
-        private const Int32 Size = 4 * 1024;
+        private const Int32 Size = 2 * 1024;
         private static readonly Int32[] _valueData = Enumerable.Range(0, Size).ToArray();
         private static readonly String[] _referenceData = Enumerable.Range(0, Size).Select(n => n.ToString()).ToArray();
         private readonly TDict _dict;
