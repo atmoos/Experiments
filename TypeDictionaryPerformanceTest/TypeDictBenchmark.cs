@@ -6,7 +6,6 @@ using TypeDictionary;
 
 namespace TypeDictionaryPerformanceTest
 {
-    [RPlotExporter]
     public abstract class TypeDictBenchmark<TDict> where TDict : ITypeDictionary<Object>, new()
     {
         private const Int32 Size = 2 * 1024;

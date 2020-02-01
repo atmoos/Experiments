@@ -24,13 +24,13 @@ This interface can be implemented in a number of ways. The interesting problem i
 
 Three solutions are provided here, all of which have interesting properties and tradeoffs.
 
-### Completely type safe implementation TypeDictionary&lt;T&gt;
-This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish this as a experiment. The trick is to transform the need to somehow get hold of a type key to the standard use case of dictionaries where an instance of a type is required as key. The most significant caveat is that we jeopardize C#'s memory management and have to do it ourselves. It's so bad that instances of [TypeDictionary](./TypeDictionary/TypeDictionary.cs) will **never be garbage collected** if Dispose is not called.
+### Completely type safe implementation [TypeDictionary&lt;T&gt;](./TypeDictionary/TypeDictionary.cs)
+This implementation prompted me to publish this as a experiment. The trick is to transform the need to somehow get hold of a type key to the standard use case of dictionaries where an instance of a type is required as key. The most significant caveat is that we jeopardize C#'s memory management and have to do it ourselves. It's so bad that instances of [TypeDictionary](./TypeDictionary/TypeDictionary.cs) will **never be garbage collected** if Dispose is not called.
 
 **Advantages**:
 - Completely type-safe, no up- or down-casts.
 - Comparatively simple implementation.
-- likely to be efficient. (ToDo: Proof!).
+- Benchmarks show that is most efficient of the three.
 - An interesting example on how to leverage C#'s powerful type system and implementation of generics.
 
 **Caveats**:
@@ -39,7 +39,7 @@ This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish
 - Not trivial to understand why the solution works at all.
 - Supporting nested classes required
 
-### Implementation relying on downcasts TypeDictionaryC&lt;T&gt;
+### Implementation relying on downcasts [TypeDictionaryC&lt;T&gt;](./TypeDictionary/TypeDictionaryC.cs)
 
 **Advantages**:
 - Easy to read the code.
@@ -47,9 +47,11 @@ This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish
 
 **Caveats**:
 - Use of downcasts.
-- Slow (ToDo: Proof!)
+- Supporting nested classes required.
+    - Required to upcast to base type.
+- Slower than [TypeDictionary&lt;T&gt;](./TypeDictionary/TypeDictionary.cs), on par with [TypeDictionaryD&lt;T&gt;](./TypeDictionary/TypeDictionaryD.cs)
 
-### Implementation circumventing the type system altogether TypeDictionaryD&lt;T&gt;
+### Implementation circumventing the type system altogether [TypeDictionaryD&lt;T&gt;](./TypeDictionary/TypeDictionaryD.cs)
 
 **Advantages**:
 - Likely to be comparatively efficient.
@@ -60,3 +62,28 @@ This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish
 **Caveats**:
 - Code hard to read due to use of the dynamic pseudo type.
 - Prone to refactoring errors.
+- Slower than [TypeDictionary&lt;T&gt;](./TypeDictionary/TypeDictionary.cs), on par with [TypeDictionaryC&lt;T&gt;](./TypeDictionary/TypeDictionaryC.cs)
+
+### Performance Measurements
+Performance has been tested with Benchmark .Net where three benchmarks defined in [TypeDictBenchmark.cs](./TypeDictionaryPerformanceTest/TypeDictBenchmark.cs) were executed.
+
+#### TypeDictionary&lt;T&gt;
+|              Method |      Mean |    Error |   StdDev |
+|-------------------- |----------:|---------:|---------:|
+|        AddValueType |  90.37 us | 1.784 us | 2.558 us |
+|    AddReferenceType |  91.60 us | 0.773 us | 0.645 us |
+| AddInterleavedTypes | 183.06 us | 3.602 us | 3.699 us |
+
+#### TypeDictionaryC&lt;T&gt;
+|              Method |     Mean |   Error |  StdDev |
+|-------------------- |---------:|--------:|--------:|
+|        AddValueType | 131.2 us | 2.52 us | 2.80 us |
+|    AddReferenceType | 122.7 us | 1.28 us | 1.14 us |
+| AddInterleavedTypes | 263.1 us | 6.09 us | 9.49 us |
+
+#### TypeDictionaryD&lt;T&gt;
+|              Method |     Mean |   Error |  StdDev |
+|-------------------- |---------:|--------:|--------:|
+|        AddValueType | 123.8 us | 1.55 us | 1.38 us |
+|    AddReferenceType | 128.2 us | 2.70 us | 3.50 us |
+| AddInterleavedTypes | 213.2 us | 2.16 us | 2.02 us |
