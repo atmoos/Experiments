@@ -5,10 +5,10 @@ namespace TypeDictionary
 {
     public sealed class TypeDictionary<T> : ITypeDictionary<T>, IDisposable
     {
-        private readonly List<IDisposable> _tokens = new List<IDisposable>();
+        private readonly List<Token> _tokens = new List<Token>();
         public void Add<TSub>(TSub item) where TSub : T => Add(Map<TSub>.Add(this, item));
         public void Add<TSub>(IEnumerable<TSub> items) where TSub : T => Add(Map<TSub>.Add(this, items));
-        private void Add(IDisposable token)
+        private void Add(Token token)
         {
             if(token != null) _tokens.Add(token);
         }
@@ -33,33 +33,37 @@ namespace TypeDictionary
         }
         public void Clear()
         {
-            foreach(IDisposable token in _tokens) {
-                token.Dispose();
+            foreach(Token token in _tokens) {
+                token.Clear(this);
             }
             _tokens.Clear();
         }
         public void Dispose() => Clear();
+        private abstract class Token
+        {
+            public abstract void Clear(TypeDictionary<T> dict);
+        }
         private static class Map<TSub>
         {
             public static List<TSub> Empty { get; } = new List<TSub>(0);
             private static readonly Dictionary<TypeDictionary<T>, List<TSub>> _dictionary = new Dictionary<TypeDictionary<T>, List<TSub>>();
-            public static IDisposable Add(TypeDictionary<T> key, TSub item)
+            public static Token Add(TypeDictionary<T> key, TSub item)
             {
                 if(_dictionary.TryGetValue(key, out var list)) {
                     list.Add(item);
                     return null;
                 }
                 _dictionary[key] = new List<TSub> { item };
-                return new ClearToken(key);
+                return new ClearToken();
             }
-            public static IDisposable Add(TypeDictionary<T> key, IEnumerable<TSub> items)
+            public static Token Add(TypeDictionary<T> key, IEnumerable<TSub> items)
             {
                 if(_dictionary.TryGetValue(key, out var list)) {
                     list.AddRange(items);
                     return null;
                 }
                 _dictionary[key] = new List<TSub>(items);
-                return new ClearToken(key);
+                return new ClearToken();
             }
             public static List<TSub> Get(TypeDictionary<T> key)
             {
@@ -68,11 +72,9 @@ namespace TypeDictionary
                 }
                 return Empty;
             }
-            private sealed class ClearToken : IDisposable
+            private sealed class ClearToken : Token
             {
-                private readonly TypeDictionary<T> _key;
-                public ClearToken(TypeDictionary<T> key) => _key = key;
-                public void Dispose() => _dictionary.Remove(_key);
+                public override void Clear(TypeDictionary<T> dict) => _dictionary.Remove(dict);
             }
         }
     }
