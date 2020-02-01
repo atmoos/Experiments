@@ -1,65 +1,54 @@
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace TypeDictionary
 {
     public sealed class TypeDictionaryC<T> : ITypeDictionary<T>
     {
-        private readonly Dictionary<Type, Map<T>> _map = new Dictionary<Type, Map<T>>();
+        private readonly Dictionary<Type, List<T>> _map = new Dictionary<Type, List<T>>();
         public void Add<TSub>(TSub item) where TSub : T
         {
             Type key = typeof(TSub);
-            if(_map.TryGetValue(key, out var m) && m is SubMap<TSub> s) {
-                s.Add(item);
+            if(_map.TryGetValue(key, out var m)) {
+                m.Add(item);
                 return;
             }
-            _map[key] = new SubMap<TSub> { item };
+            _map[key] = new List<T> { item };
         }
         public void Add<TSub>(IEnumerable<TSub> items) where TSub : T
         {
             Type key = typeof(TSub);
-            if(_map.TryGetValue(key, out var m) && m is SubMap<TSub> s) {
-                s.Add(items);
-                return;
+            if(!_map.TryGetValue(key, out var m)) {
+                m = new List<T>();
+                _map[key] = m;
+
             }
-            _map[key] = new SubMap<TSub> { items };
+            foreach(var item in items) {
+                m.Add(item);
+            }
         }
         public IEnumerable<TSub> Get<TSub>() where TSub : T
         {
-            if(_map.TryGetValue(typeof(TSub), out var m) && m is SubMap<TSub> s) {
-                return s;
+            if(_map.TryGetValue(typeof(TSub), out var m)) {
+                return m.Cast<TSub>();
             }
             return Array.Empty<TSub>();
         }
         public void Remove<TSub>(TSub item) where TSub : T
         {
-            if(_map.TryGetValue(typeof(TSub), out var m) && m is SubMap<TSub> s) {
-                s.Remove(item);
+            if(_map.TryGetValue(typeof(TSub), out var m)) {
+                m.Remove(item);
             }
         }
         public void Remove<TSub>(IEnumerable<TSub> items) where TSub : T
         {
-            if(_map.TryGetValue(typeof(TSub), out var m) && m is SubMap<TSub> s) {
-                s.Remove(items);
+            if(_map.TryGetValue(typeof(TSub), out var m)) {
+                foreach(var item in items) {
+                    m.Remove(item);
+                }
             }
         }
         public void Clear() => _map.Clear();
-        private abstract class Map<TItem> { }
-        private sealed class SubMap<TSub> : Map<T>, IEnumerable<TSub> where TSub : T
-        {
-            private readonly List<TSub> _subMap = new List<TSub>();
-            public void Add(TSub item) => _subMap.Add(item);
-            public void Add(IEnumerable<TSub> items) => _subMap.AddRange(items);
-            public void Remove(TSub item) => _subMap.Remove(item);
-            public void Remove(IEnumerable<TSub> items)
-            {
-                foreach(TSub item in items) {
-                    _subMap.Remove(item);
-                }
-            }
-            public IEnumerator<TSub> GetEnumerator() => _subMap.GetEnumerator();
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
     }
 }
