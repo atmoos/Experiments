@@ -24,7 +24,7 @@ This interface can be implemented in a number of ways. The interesting problem i
 
 Three solutions are provided here, all of which have interesting properties and tradeoffs.
 
-### Completely type safe implementation TypeDictionary<T>
+### Completely type safe implementation TypeDictionary&lt;T&gt;
 This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish this as a experiment. The trick is to transform the need to somehow get hold of a type key to the standard use case of dictionaries where an instance of a type is required as key. The most significant caveat is that we jeopardize C#'s memory management and have to do it ourselves. It's so bad that instances of [TypeDictionary](./TypeDictionary/TypeDictionary.cs) will **never be garbage collected** if Dispose is not called.
 
 **Advantages**:
@@ -34,29 +34,28 @@ This [implementation](./TypeDictionary/TypeDictionary.cs) prompted me to publish
 - An interesting example on how to leverage C#'s powerful type system and implementation of generics.
 
 **Caveats**:
-- Memory has to managed by hand -> IDisposable required.
+- Memory has to managed by hand -&gt; IDisposable required.
 - Implementation must be thread safe.
 - Not trivial to understand why the solution works at all.
 - Supporting nested classes required
 
-### Implementation relying on downcasts TypeDictionaryC<T>
+### Implementation relying on downcasts TypeDictionaryC&lt;T&gt;
 
 **Advantages**:
 - Easy to read the code.
 - Type safe implementation. (Even though down casts are required)
 
 **Caveats**:
-- Heavy use of downcasts.
-- Supporting nested classes required.
-    - Required to upcast to base type.
+- Use of downcasts.
 - Slow (ToDo: Proof!)
 
-### Implementation circumventing the type system altogether TypeDictionaryD<T>
+### Implementation circumventing the type system altogether TypeDictionaryD&lt;T&gt;
 
 **Advantages**:
 - Likely to be comparatively efficient.
     - C# has an efficient way of dealing with the dynamic type.
-- Simplest implementation of the required interface.
+- No explicit casting required.
+    - (Using "dynamic" may be considered casting non the less..)
 
 **Caveats**:
 - Code hard to read due to use of the dynamic pseudo type.
