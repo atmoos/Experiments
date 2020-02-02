@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace TypeDictionary
 {
@@ -46,7 +47,7 @@ namespace TypeDictionary
         private static class Map<TSub>
         {
             public static List<TSub> Empty { get; } = new List<TSub>(0);
-            private static readonly Dictionary<TypeDictionary<T>, List<TSub>> _dictionary = new Dictionary<TypeDictionary<T>, List<TSub>>();
+            private static readonly ConcurrentDictionary<TypeDictionary<T>, List<TSub>> _dictionary = new ConcurrentDictionary<TypeDictionary<T>, List<TSub>>();
             public static Token Add(TypeDictionary<T> key, TSub item)
             {
                 if(_dictionary.TryGetValue(key, out var list)) {
@@ -74,7 +75,7 @@ namespace TypeDictionary
             }
             private sealed class ClearToken : Token
             {
-                public override void Clear(TypeDictionary<T> dict) => _dictionary.Remove(dict);
+                public override void Clear(TypeDictionary<T> dict) => _dictionary.TryRemove(dict, out var _);
             }
         }
     }
