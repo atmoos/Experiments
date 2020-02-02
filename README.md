@@ -65,25 +65,25 @@ This implementation prompted me to publish this as a experiment. The trick is to
 - Slower than [TypeDictionary&lt;T&gt;](./TypeDictionary/TypeDictionary.cs), on par with [TypeDictionaryC&lt;T&gt;](./TypeDictionary/TypeDictionaryC.cs)
 
 ### Performance Measurements
-Performance has been tested with Benchmark .Net where three benchmarks defined in [TypeDictBenchmark.cs](./TypeDictionaryPerformanceTest/TypeDictBenchmark.cs) were executed.
+Performance has been tested with Benchmark .Net where three benchmarks defined in [AddBenchmark.cs](./TypeDictionaryPerformanceTest/AddBenchmark.cs) were executed.
 
 #### TypeDictionary&lt;T&gt;
-|              Method |      Mean |    Error |   StdDev |    Median |
-|-------------------- |----------:|---------:|---------:|----------:|
-|        AddValueType |  90.78 us | 1.799 us | 4.239 us |  92.29 us |
-|    AddReferenceType |  99.67 us | 1.405 us | 1.314 us |  99.84 us |
-| AddInterleavedTypes | 178.89 us | 2.957 us | 2.766 us | 179.15 us |
+|              Method |      Mean |    Error |   StdDev |
+|-------------------- |----------:|---------:|---------:|
+|        AddValueType |  79.99 us | 0.941 us | 0.880 us |
+|    AddReferenceType | 100.17 us | 1.010 us | 0.896 us |
+| AddInterleavedTypes | 176.07 us | 2.363 us | 2.210 us |
 
 #### TypeDictionaryC&lt;T&gt;
 |              Method |     Mean |   Error |  StdDev |
 |-------------------- |---------:|--------:|--------:|
-|        AddValueType | 131.9 us | 2.03 us | 1.80 us |
-|    AddReferenceType | 103.7 us | 1.15 us | 1.08 us |
-| AddInterleavedTypes | 245.6 us | 2.02 us | 1.79 us |
+|        AddValueType | 121.5 us | 1.50 us | 1.40 us |
+|    AddReferenceType | 110.0 us | 1.26 us | 1.18 us |
+| AddInterleavedTypes | 234.9 us | 1.16 us | 0.97 us |
 
 #### TypeDictionaryD&lt;T&gt;
 |              Method |     Mean |   Error |  StdDev |
 |-------------------- |---------:|--------:|--------:|
-|        AddValueType | 120.7 us | 1.22 us | 1.14 us |
-|    AddReferenceType | 124.9 us | 1.61 us | 1.50 us |
-| AddInterleavedTypes | 240.7 us | 2.22 us | 2.07 us |
+|        AddValueType | 115.8 us | 1.25 us | 1.17 us |
+|    AddReferenceType | 110.4 us | 1.31 us | 1.16 us |
+| AddInterleavedTypes | 220.0 us | 1.83 us | 1.52 us |
