@@ -11,7 +11,7 @@ In essence, an add and get method where required. But the key would not be an in
 ```language csharp
 public void Add(TKey key, TValue value) // Standard dictionary Add
 
-public void Add<TValue>(TValue) // Typed dictionary
+public void Add<TValue>(TValue value) // Typed dictionary
 ```
 The corresponding get method of the typed dictionary was chosen to return an enumerable of T. (In effect making the dictionary a "multi-map").
 
