@@ -68,22 +68,22 @@ This implementation prompted me to publish this as a experiment. The trick is to
 Performance has been tested with Benchmark .Net where three benchmarks defined in [TypeDictBenchmark.cs](./TypeDictionaryPerformanceTest/TypeDictBenchmark.cs) were executed.
 
 #### TypeDictionary&lt;T&gt;
-|              Method |      Mean |    Error |   StdDev |
-|-------------------- |----------:|---------:|---------:|
-|        AddValueType |  90.37 us | 1.784 us | 2.558 us |
-|    AddReferenceType |  91.60 us | 0.773 us | 0.645 us |
-| AddInterleavedTypes | 183.06 us | 3.602 us | 3.699 us |
+|              Method |      Mean |    Error |   StdDev |    Median |
+|-------------------- |----------:|---------:|---------:|----------:|
+|        AddValueType |  90.78 us | 1.799 us | 4.239 us |  92.29 us |
+|    AddReferenceType |  99.67 us | 1.405 us | 1.314 us |  99.84 us |
+| AddInterleavedTypes | 178.89 us | 2.957 us | 2.766 us | 179.15 us |
 
 #### TypeDictionaryC&lt;T&gt;
 |              Method |     Mean |   Error |  StdDev |
 |-------------------- |---------:|--------:|--------:|
-|        AddValueType | 131.2 us | 2.52 us | 2.80 us |
-|    AddReferenceType | 122.7 us | 1.28 us | 1.14 us |
-| AddInterleavedTypes | 263.1 us | 6.09 us | 9.49 us |
+|        AddValueType | 131.9 us | 2.03 us | 1.80 us |
+|    AddReferenceType | 103.7 us | 1.15 us | 1.08 us |
+| AddInterleavedTypes | 245.6 us | 2.02 us | 1.79 us |
 
 #### TypeDictionaryD&lt;T&gt;
 |              Method |     Mean |   Error |  StdDev |
 |-------------------- |---------:|--------:|--------:|
-|        AddValueType | 123.8 us | 1.55 us | 1.38 us |
-|    AddReferenceType | 128.2 us | 2.70 us | 3.50 us |
-| AddInterleavedTypes | 213.2 us | 2.16 us | 2.02 us |
+|        AddValueType | 120.7 us | 1.22 us | 1.14 us |
+|    AddReferenceType | 124.9 us | 1.61 us | 1.50 us |
+| AddInterleavedTypes | 240.7 us | 2.22 us | 2.07 us |

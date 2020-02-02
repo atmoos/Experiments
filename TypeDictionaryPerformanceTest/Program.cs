@@ -9,9 +9,9 @@ namespace TypeDictionaryPerformanceTest
         public static void Main(string[] args)
         {
             var summaries = new[]{
-                BenchmarkRunner.Run<TypeDictBenchmark<TypeDictionary<Object>>>(),
-                BenchmarkRunner.Run<TypeDictBenchmark<TypeDictionaryC<Object>>>(),
-                BenchmarkRunner.Run<TypeDictBenchmark<TypeDictionaryD<Object>>>()};
+                BenchmarkRunner.Run<AddBenchmark<TypeDictionary<Object>>>(),
+                BenchmarkRunner.Run<AddBenchmark<TypeDictionaryC<Object>>>(),
+                BenchmarkRunner.Run<AddBenchmark<TypeDictionaryD<Object>>>()};
         }
     }
 }

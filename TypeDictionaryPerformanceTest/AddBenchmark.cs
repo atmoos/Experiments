@@ -6,13 +6,16 @@ using TypeDictionary;
 
 namespace TypeDictionaryPerformanceTest
 {
-    public abstract class TypeDictBenchmark<TDict> where TDict : ITypeDictionary<Object>, new()
+    public class AddBenchmark<TDict> where TDict : ITypeDictionary<Object>, new()
     {
         private const Int32 Size = 2 * 1024;
         private static readonly Int32[] _valueData = Enumerable.Range(0, Size).ToArray();
         private static readonly String[] _referenceData = Enumerable.Range(0, Size).Select(n => n.ToString()).ToArray();
         private readonly TDict _dict;
-        protected TypeDictBenchmark() => _dict = new TDict();
+        protected AddBenchmark() => _dict = new TDict();
+        [GlobalCleanup]
+        public void Clean() => _dict.Clear();
+
         [Benchmark]
         public void AddValueType() => Add(_valueData);
         [Benchmark]
