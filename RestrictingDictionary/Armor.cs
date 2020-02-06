@@ -2,15 +2,11 @@ using System;
 
 namespace RestrictingDictionary
 {
-    public abstract class Armor
-    {
-        public Slot Slot { get; }
-
-        protected Armor(Slot slot) => Slot = slot;
-    }
+    public abstract class Armor { }
     public sealed class Armor<TSlot> : Armor
         where TSlot : Slot, new()
     {
-        public Armor() : base(new TSlot()) { }
+        public TSlot Slot { get; }
+        public Armor() => Slot = new TSlot();
     }
 }

@@ -12,5 +12,19 @@ namespace RestrictingDictionary
         {
             _dictionary.Add(slot, armor);
         }
+
+        static void Main()
+        {
+            var head = new Armor<Head>();
+            var torso = new Armor<Torso>();
+            var torsoKey = new Torso();
+            var dictionary = new SafeDictionary();
+            dictionary.Add(head.Slot, head);
+            dictionary.Add(torsoKey, torso);
+            Console.WriteLine(torso == dictionary[torsoKey]);
+            // Do not compile:
+            // dictionary.Add(torsoKey, head);
+            // dictionary.Add<Torso>(torsoKey, head);
+        }
     }
 }
